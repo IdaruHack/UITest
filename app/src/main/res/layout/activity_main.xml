@@ -11,18 +11,21 @@
         <ImageView
             android:id="@+id/user_image"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:src="@drawable/user_icon"/>
+            android:layout_height="wrap_content"
+            android:src="@drawable/user_icon"
+            android:padding="5dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="漳州智慧行"
             android:gravity="center"
             android:textSize="18dp"
-            />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/VIEW_PAGER"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -30,9 +33,34 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="180dp" />
+            <LinearLayout
+                android:id="@+id/linearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/view_pager">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_dot_normal"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/icon_dot_normal"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/icon_dot_normal"/>
+            </LinearLayout>
         <ImageView
-            android:layout_width=""
-            android:layout_height="" />
-    </LinearLayout>
+            android:id="@+id/point_red"
+            android:layout_width="7dp"
+            android:layout_height="7dp"
+            android:layout_marginLeft="189dp"
+            android:layout_alignBottom="@+id/linearlayout"
+            android:src="@drawable/icon_red_point" />
+    </RelativeLayout>
 
 </LinearLayout>

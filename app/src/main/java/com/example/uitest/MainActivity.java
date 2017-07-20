@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,19 +14,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    LayoutInflater mLayoutInflater;
-    LinearLayout mNumLayout;
-    private ArrayList<View> mViewList = new ArrayList<View>();
-    Button mPreSelectedBt;
+import static com.example.uitest.R.id.linearlayout;
 
-    MyPagerAdapter mPagerAdapter;
+public class MainActivity extends FragmentActivity {
+    private ImageView point_red;
+    private ViewPager viewPager;
+    private int distance;
+    private LinearLayout linearlayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,81 +39,37 @@ public class MainActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,UserInformationActivity.class);
+                Intent intent = new Intent(MainActivity.this, UserInformationActivity.class);
+                startActivity(intent);
             }
         });
-        mLayoutInflater = getLayoutInflater();
-
-        mViewList.add(mLayoutInflater.inflate(R.layout.per_pager1, null));
-        mViewList.add(mLayoutInflater.inflate(R.layout.per_pager2, null));
-        mViewList.add(mLayoutInflater.inflate(R.layout.per_pager3, null));
-
+        List<Fragment> fragments = new ArrayList<Fragment>();
+        fragments.add(new FragmentImage1());
+        fragments.add(new FragmentImage2());
+        fragments.add(new FragmentImage3());
+        FragAdapter adapter = new FragAdapter(getSupportFragmentManager(), fragments);
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        mPagerAdapter = new MyPagerAdapter();
-        viewPager.setAdapter(mPagerAdapter);
+        viewPager.setAdapter(adapter);
 
-        mNumLayout = (LinearLayout) findViewById(R.id.);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_dot_normal);
-        for (int i = 0; i < mViewList.size(); i++) {
-            Button bt = new Button(this);
-            bt.setLayoutParams(new ViewGroup.LayoutParams(bitmap.getWidth(),bitmap.getHeight()));
-            bt.setBackgroundResource(R.drawable.icon_dot_normal);
-            mNumLayout.addView(bt);
-        }
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //测出页面滚动时小红点移动的距离，并通过setLayoutParams(params)不断更新其位置
+                distance = 13;
+                float leftMargin = distance * (position + positionOffset);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) point_red.getLayoutParams();
+                params.leftMargin = Math.round(leftMargin);
+                point_red.setLayoutParams(params);
+            }
             @Override
             public void onPageSelected(int position) {
 
-                if(mPreSelectedBt != null){
-                    mPreSelectedBt.setBackgroundResource(R.drawable.icon_dot_normal);
-                }
-
-                Button currentBt = (Button)mNumLayout.getChildAt(position);
-                currentBt.setBackgroundResource(R.drawable.home_page_dot_select);
-                mPreSelectedBt = currentBt;
-
-                //Log.i("INFO", "current item:"+position);
             }
 
             @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-                // TODO Auto-generated method stub
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
-
-
     }
-    public class MyPagerAdapter extends PagerAdapter {
-        @Override
-        public int getCount() {
-            return mViewList.size();
-        }
-
-        @Override
-        public Object instantiateItem(View container, int position) {
-            Log. i("INFO", "instantiate item:"+position);
-            ((ViewPager) container).addView(mViewList.get(position),0);
-            return mViewList .get(position);
-        }
-
-        @Override
-        public void destroyItem(View container, int position, Object object) {
-            Log.i("INFO", "destroy item:"+position);
-            ((ViewPager) container).removeView( mViewList.get(position));
-        }
-
-        @Override
-        public boolean isViewFromObject(View arg0, Object arg1) {
-            return arg0 == arg1;
-        }
-    }
-
 }
